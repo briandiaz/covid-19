@@ -18,7 +18,7 @@ describe('CasesService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('GET -> /', () => {
+  describe('getAllCases()', () => {
     it('should return an array of cases', () => {
       const getAllCases = service.getAllCases();
       expect(getAllCases).toBeInstanceOf(Array);        

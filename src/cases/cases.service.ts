@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { Case } from './case.model';
+import { v1 as uuid } from 'uuid';
+import { Case, Gender } from './case.model';
+import { CreateCaseDTO } from './dtos/create-case.dto';
 
 @Injectable()
 export class CasesService {
@@ -7,5 +9,24 @@ export class CasesService {
 
     getAllCases(): Case[] {
         return this.cases;
+    }
+
+    async createCase(createCaseDTO: CreateCaseDTO): Promise<Case> {
+        let { gender, died } = createCaseDTO;
+
+        if (!gender) gender = Gender.NA;
+
+        if (!died) died = false;
+
+        const _case: Case = {
+            id: uuid(),
+            ...createCaseDTO,
+            gender,
+            died,
+        };
+
+        this.cases.push(_case);
+
+        return Promise.resolve(_case);
     }
 }
