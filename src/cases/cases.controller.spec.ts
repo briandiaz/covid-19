@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CasesController } from './cases.controller';
 import { CasesService } from './cases.service';
-import { Case, Gender } from './case.model';
-import { CreateCaseDTO } from './dtos/create-case.dto';
+import { Gender } from './case.model';
 
 describe('Cases Controller', () => {
   let controller: CasesController;
