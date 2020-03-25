@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { CasesService } from './cases.service';
 import { Case } from './case.model';
 import { CreateCaseDTO } from './dtos/create-case.dto';
@@ -17,4 +17,8 @@ export class CasesController {
         return await this.casesService.createCase(createCaseDTO);
     }
 
+    @Get('/:id')
+    async getCaseById(@Param('id') id: string): Promise<Case> {
+        return await this.casesService.getCaseById(id);
+    }
 }

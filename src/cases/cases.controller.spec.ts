@@ -5,6 +5,8 @@ import { Gender } from './case.model';
 
 describe('Cases Controller', () => {
   let controller: CasesController;
+  let mockCase = null;
+  let mockCaseParams = null;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -13,6 +15,18 @@ describe('Cases Controller', () => {
     }).compile();
 
     controller = module.get<CasesController>(CasesController);
+
+    mockCaseParams = {
+      name: 'Michael Vargas',
+      'national_id': '031-54466556-9',
+      latitude: 18.9912,
+      longitude: 60.949904,
+      'infection_stage': 1,
+      gender: Gender.MALE,
+      recovered: false,
+      died: false
+    };
+    mockCase = await controller.createCase(mockCaseParams);
   });
 
   it('should be defined', () => {
@@ -27,22 +41,21 @@ describe('Cases Controller', () => {
   });
 
   describe('POST /', () => {
-    const params = {
-      name: 'Michael Vargas',
-      'national_id': '031-54466556-9',
-      latitude: 18.9912,
-      longitude: 60.949904,
-      'infection_stage': 1,
-      gender: Gender.MALE,
-      recovered: false,
-      died: false
-    };
     it('should return an object of case entity when created', async () => {
-      const expectedResult = params;
-      const response = await controller.createCase(params);
+      const expectedResult = mockCaseParams;
+      const response = await controller.createCase(mockCaseParams);
       expect(response).toBeDefined();
       delete response.id;
       expect(response).toStrictEqual(expectedResult);
     });
   });
+
+  describe('GET /:id', () => {
+    it('should return a case by given id', async () => {
+      const expectedResult = mockCase;
+      const response = await controller.getCaseById(mockCase.id);
+      expect(response).toBe(expectedResult);
+    });
+  });
+  
 });

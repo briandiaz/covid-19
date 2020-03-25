@@ -5,7 +5,7 @@ export enum Gender {
 };
 
 export interface Case {
-    id: number,
+    id: string,
     name: string,
     national_id: string,
     latitude: number,

@@ -29,4 +29,10 @@ export class CasesService {
 
         return Promise.resolve(_case);
     }
+
+    async getCaseById(id: string): Promise<Case> {
+        const _case: Case = this.cases.find((c) => c.id === id);
+
+        return Promise.resolve(_case);
+    }
 }
