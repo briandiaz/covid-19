@@ -20,10 +20,10 @@ describe('CasesService', () => {
 
     mockCaseParams = {
       name: 'Michael Vargas',
-      'national_id': '031-54466556-9',
+      nationalId: '031-54466556-9',
       latitude: 18.9912,
       longitude: 60.949904,
-      'infection_stage': 1,
+      infectionStage: 1,
       gender: Gender.MALE,
       recovered: false,
       died: false
@@ -52,10 +52,10 @@ describe('CasesService', () => {
   describe('createCase()', () => {
     const params = {
       name: 'Susan Goodman',
-      'national_id': '1100-54466556-9',
+      nationalId: '1100-54466556-9',
       latitude: 48.9912,
       longitude: 30.949904,
-      'infection_stage': 2,
+      infectionStage: 2,
       gender: Gender.FEMALE,
       recovered: true,
       died: false

@@ -19,10 +19,10 @@ describe('Cases Controller', () => {
 
     mockCaseParams = {
       name: 'Michael Vargas',
-      'national_id': '031-54466556-9',
+      nationalId: '031-54466556-9',
       latitude: 18.9912,
       longitude: 60.949904,
-      'infection_stage': 1,
+      infectionStage: 1,
       gender: Gender.MALE,
       recovered: false,
       died: false

@@ -2,10 +2,10 @@ import { Gender } from '../case.model';
 
 export class UpdateCaseDTO {
     name?: string;
-    national_id?: string;
+    nationalId?: string;
     latitude?: number;
     longitude?: number;
-    infection_stage?: number;
+    infectionStage?: number;
     gender?: Gender;
     recovered?: boolean;
     died?: boolean;
