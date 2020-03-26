@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
 import { CasesService } from './cases.service';
 import { Case } from './case.model';
 import { CreateCaseDTO } from './dtos/create-case.dto';
