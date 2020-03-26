@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Put } from '@nestjs/common';
 import { CasesService } from './cases.service';
 import { Case } from './case.model';
 import { CreateCaseDTO } from './dtos/create-case.dto';
+import { UpdateCaseDTO } from './dtos/update-case.dto';
 
 @Controller('cases')
 export class CasesController {
@@ -20,5 +21,10 @@ export class CasesController {
     @Get('/:id')
     async getCaseById(@Param('id') id: string): Promise<Case> {
         return await this.casesService.getCaseById(id);
+    }
+
+    @Put('/:id')
+    async updateCase(@Param('id') id: string, @Body() updateCaseDTO: UpdateCaseDTO): Promise<Case> {
+        return await this.casesService.updateCase(id, updateCaseDTO);
     }
 }

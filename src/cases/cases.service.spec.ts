@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CasesService } from './cases.service';
 import { CasesController } from './cases.controller';
 import { Gender } from './case.model';
+import { UpdateCaseDTO } from './dtos/update-case.dto';
 
 describe('CasesService', () => {
   let service: CasesService;
@@ -68,11 +69,22 @@ describe('CasesService', () => {
     });
   });
 
-  describe('GET /:id', () => {
+  describe('getCaseById()', () => {
     it('should return a case by given id', async () => {
       const expectedResult = mockCase;
       const response = await service.getCaseById(mockCase.id);
       expect(response).toBe(expectedResult);
+    });
+  });
+
+  describe('updateCase()', () => {
+    it('should update a case and return the data', async () => {
+      const params: UpdateCaseDTO = {
+        recovered: true,
+      };
+      const response = await service.updateCase(mockCase.id, params);
+      expect(response).toBeDefined();
+      expect(response).toStrictEqual({ ...mockCase, ...params });
     });
   });
 });
