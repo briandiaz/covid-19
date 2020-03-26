@@ -59,7 +59,7 @@ describe('Cases Controller', () => {
     });
   });
 
-  describe('PUT /:id', () => {
+  describe('PATCH /:id', () => {
     it('should update a case and return the data', async () => {
       const params: UpdateCaseDTO = {
         recovered: true,

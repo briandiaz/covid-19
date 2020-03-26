@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
 import { CasesService } from './cases.service';
 import { Case } from './case.model';
 import { CreateCaseDTO } from './dtos/create-case.dto';
@@ -23,7 +23,7 @@ export class CasesController {
         return await this.casesService.getCaseById(id);
     }
 
-    @Put('/:id')
+    @Patch('/:id')
     async updateCase(@Param('id') id: string, @Body() updateCaseDTO: UpdateCaseDTO): Promise<Case> {
         return await this.casesService.updateCase(id, updateCaseDTO);
     }
