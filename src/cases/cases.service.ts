@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { v1 as uuid } from 'uuid';
 import { Case, Gender } from './case.model';
 import { CreateCaseDTO } from './dtos/create-case.dto';
@@ -35,14 +35,15 @@ export class CasesService {
 
     async getCaseById(id: string): Promise<Case> {
         const __case: Case = this.findCaseById(id);
-        if (!__case) return Promise.reject(new Error('NOT_FOUND'));
+        if (!__case) {
+            throw new NotFoundException(`Case with id: '${id}' is not found.`);
+        }
 
         return Promise.resolve(__case);
     }
 
     async updateCase(id: string, updateCaseDTO: UpdateCaseDTO): Promise<Case> {
-        const __case: Case = this.findCaseById(id);
-        if (!__case) return Promise.reject(new Error('NOT_FOUND'));
+        const __case: Case = await this.getCaseById(id);
 
         const caseIndex = this.cases.indexOf(__case);
         const updatedCase: Case = {
