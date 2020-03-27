@@ -1,8 +1,12 @@
 # COVID-19 API
 
+[![Build Status](https://travis-ci.org/briandiaz/covid-19.svg?branch=master)](https://travis-ci.org/briandiaz/covid-19)
+
 ## Description
 
 API for persisting COVID-19 cases.
+
+Built in [Nestjs](https://nestjs.com)
 
 ## Installation
 
