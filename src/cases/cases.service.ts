@@ -3,6 +3,7 @@ import { v1 as uuid } from 'uuid';
 import { Case, Gender } from './case.model';
 import { CreateCaseDTO } from './dtos/create-case.dto';
 import { UpdateCaseDTO } from './dtos/update-case.dto';
+import { GetCaseFilterDTO } from './dtos/get-case-filter.dto';
 
 @Injectable()
 export class CasesService {
@@ -10,8 +11,26 @@ export class CasesService {
 
     private findCaseById = (id): Case => this.cases.find((c) => c.id === id);
 
-    getAllCases(): Case[] {
-        return this.cases;
+    async getAllCases(): Promise<Case[]> {
+        return Promise.resolve(this.cases);
+    }
+
+    async getCasesFiltered(getCaseFilterDTO: GetCaseFilterDTO): Promise<Case[]> {
+        const keyFilters = Object.keys(getCaseFilterDTO);
+
+        let filteredCases = [];
+
+        keyFilters.map((key) => {
+            const filter = getCaseFilterDTO[key];
+            const currentFilter = this.cases.filter((c) => c[key] === filter);
+            filteredCases = [...filteredCases, ...currentFilter];
+        })
+
+        if (!filteredCases.length) {
+            throw new NotFoundException('No cases found with search criteria.');
+        }
+
+        return Promise.resolve(filteredCases);
     }
 
     async createCase(createCaseDTO: CreateCaseDTO): Promise<Case> {

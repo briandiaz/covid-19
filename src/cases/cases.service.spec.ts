@@ -30,7 +30,7 @@ describe('CasesService', () => {
     };
     mockCase = await service.createCase(mockCaseParams);
 
-    cases = service.getAllCases();
+    cases = await service.getAllCases();
   });
 
   it('should be defined', () => {
