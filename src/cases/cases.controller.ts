@@ -12,7 +12,7 @@ export class CasesController {
     constructor(private casesService: CasesService) {}
 
     @Get()
-    async getAllCases(@Query('', ParseCasesFilterPipe) getCaseFilterDTO: GetCaseFilterDTO): Promise<Case[]> {
+    async getAllCases(@Query(ParseCasesFilterPipe, ValidationPipe) getCaseFilterDTO: GetCaseFilterDTO): Promise<Case[]> {
         if (Object.keys(getCaseFilterDTO).length) {
             return await this.casesService.getCasesFiltered(getCaseFilterDTO);
         }
