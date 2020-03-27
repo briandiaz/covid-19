@@ -3,6 +3,7 @@ import { CasesService } from './cases.service';
 import { Case } from './case.model';
 import { CreateCaseDTO } from './dtos/create-case.dto';
 import { UpdateCaseDTO } from './dtos/update-case.dto';
+import { GenderValidationPipe } from './pipes/cases-gender.validation';
 
 @Controller('cases')
 export class CasesController {
@@ -15,7 +16,7 @@ export class CasesController {
 
     @Post()
     @UsePipes(ValidationPipe)
-    async createCase(@Body() createCaseDTO: CreateCaseDTO): Promise<Case> {
+    async createCase(@Body('', GenderValidationPipe) createCaseDTO: CreateCaseDTO): Promise<Case> {
         return await this.casesService.createCase(createCaseDTO);
     }
 
@@ -25,7 +26,7 @@ export class CasesController {
     }
 
     @Patch('/:id')
-    async updateCase(@Param('id') id: string, @Body() updateCaseDTO: UpdateCaseDTO): Promise<Case> {
+    async updateCase(@Param('id') id: string, @Body('', GenderValidationPipe) updateCaseDTO: UpdateCaseDTO): Promise<Case> {
         return await this.casesService.updateCase(id, updateCaseDTO);
     }
 }

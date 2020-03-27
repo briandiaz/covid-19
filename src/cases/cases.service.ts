@@ -22,8 +22,8 @@ export class CasesService {
         if (!died) died = false;
 
         const __case: Case = {
-            id: uuid(),
             ...createCaseDTO,
+            id: uuid(),
             gender,
             died,
         };

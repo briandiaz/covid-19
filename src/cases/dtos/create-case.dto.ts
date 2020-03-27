@@ -1,5 +1,5 @@
 import { Gender } from '../case.model';
-import { IsBoolean, IsNotEmpty, IsInt, IsString, IsDecimal } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsInt, IsString, IsLatitude, IsLongitude } from 'class-validator';
 
 export class CreateCaseDTO {
     @IsNotEmpty()
@@ -11,11 +11,11 @@ export class CreateCaseDTO {
     nationalId: string;
 
     @IsNotEmpty()
-    @IsDecimal()
+    @IsLatitude()
     latitude: number;
 
     @IsNotEmpty()
-    @IsDecimal()
+    @IsLongitude()
     longitude: number;
 
     @IsNotEmpty()
