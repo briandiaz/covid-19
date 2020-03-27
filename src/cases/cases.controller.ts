@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CasesService } from './cases.service';
 import { Case } from './case.model';
 import { CreateCaseDTO } from './dtos/create-case.dto';
@@ -14,6 +14,7 @@ export class CasesController {
     }
 
     @Post()
+    @UsePipes(ValidationPipe)
     async createCase(@Body() createCaseDTO: CreateCaseDTO): Promise<Case> {
         return await this.casesService.createCase(createCaseDTO);
     }
