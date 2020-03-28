@@ -10,4 +10,4 @@ install:
   - npm install
 
 script:
-  - npm run test -- --updateSnapshot.
+  - npm run test -- --updateSnapshot
