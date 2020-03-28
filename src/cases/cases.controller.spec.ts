@@ -37,7 +37,7 @@ describe('Cases Controller', () => {
   describe('GET /', () => {
     it('should return an array of cases', async () => {
       const getAllCases = await controller.getAllCases({});
-      expect(getAllCases).toBeInstanceOf(Array);        
+      expect(getAllCases).toBeInstanceOf(Array);
     });
   });
 

@@ -7,70 +7,70 @@ import { GetCaseFilterDTO } from './dtos/get-case-filter.dto';
 
 @Injectable()
 export class CasesService {
-    private cases: Case[] = [];
+  private cases: Case[] = [];
 
-    private findCaseById = (id): Case => this.cases.find((c) => c.id === id);
+  private findCaseById = (id): Case => this.cases.find((c) => c.id === id);
 
-    async getAllCases(): Promise<Case[]> {
-        return Promise.resolve(this.cases);
+  async getAllCases(): Promise<Case[]> {
+    return Promise.resolve(this.cases);
+  }
+
+  async getCasesFiltered(getCaseFilterDTO: GetCaseFilterDTO): Promise<Case[]> {
+    const keyFilters = Object.keys(getCaseFilterDTO);
+
+    let filteredCases = [];
+
+    keyFilters.map((key) => {
+      const filter = getCaseFilterDTO[key];
+      const currentFilter = this.cases.filter((c) => c[key] === filter);
+      filteredCases = [...filteredCases, ...currentFilter];
+    })
+
+    if (!filteredCases.length) {
+      throw new NotFoundException('No cases found with search criteria.');
     }
 
-    async getCasesFiltered(getCaseFilterDTO: GetCaseFilterDTO): Promise<Case[]> {
-        const keyFilters = Object.keys(getCaseFilterDTO);
+    return Promise.resolve(filteredCases);
+  }
 
-        let filteredCases = [];
+  async createCase(createCaseDTO: CreateCaseDTO): Promise<Case> {
+    let { gender, died } = createCaseDTO;
 
-        keyFilters.map((key) => {
-            const filter = getCaseFilterDTO[key];
-            const currentFilter = this.cases.filter((c) => c[key] === filter);
-            filteredCases = [...filteredCases, ...currentFilter];
-        })
+    if (!gender) gender = Gender.NA;
 
-        if (!filteredCases.length) {
-            throw new NotFoundException('No cases found with search criteria.');
-        }
+    if (!died) died = false;
 
-        return Promise.resolve(filteredCases);
+    const __case: Case = {
+      ...createCaseDTO,
+      id: uuid(),
+      gender,
+      died,
+    };
+
+    this.cases.push(__case);
+
+    return Promise.resolve(__case);
+  }
+
+  async getCaseById(id: string): Promise<Case> {
+    const __case: Case = this.findCaseById(id);
+    if (!__case) {
+      throw new NotFoundException(`Case with id: '${id}' is not found.`);
     }
 
-    async createCase(createCaseDTO: CreateCaseDTO): Promise<Case> {
-        let { gender, died } = createCaseDTO;
+    return Promise.resolve(__case);
+  }
 
-        if (!gender) gender = Gender.NA;
+  async updateCase(id: string, updateCaseDTO: UpdateCaseDTO): Promise<Case> {
+    const __case: Case = await this.getCaseById(id);
 
-        if (!died) died = false;
+    const caseIndex = this.cases.indexOf(__case);
+    const updatedCase: Case = {
+      ...__case,
+      ...updateCaseDTO,
+    };
+    this.cases[caseIndex] = updatedCase;
 
-        const __case: Case = {
-            ...createCaseDTO,
-            id: uuid(),
-            gender,
-            died,
-        };
-
-        this.cases.push(__case);
-
-        return Promise.resolve(__case);
-    }
-
-    async getCaseById(id: string): Promise<Case> {
-        const __case: Case = this.findCaseById(id);
-        if (!__case) {
-            throw new NotFoundException(`Case with id: '${id}' is not found.`);
-        }
-
-        return Promise.resolve(__case);
-    }
-
-    async updateCase(id: string, updateCaseDTO: UpdateCaseDTO): Promise<Case> {
-        const __case: Case = await this.getCaseById(id);
-
-        const caseIndex = this.cases.indexOf(__case);
-        const updatedCase: Case = {
-            ...__case,
-            ...updateCaseDTO,
-        };
-        this.cases[caseIndex] = updatedCase;
-
-        return Promise.resolve(updatedCase);
-    }
+    return Promise.resolve(updatedCase);
+  }
 }

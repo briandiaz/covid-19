@@ -9,29 +9,29 @@ import { ParseCasesFilterPipe } from './pipes/parse-cases-filter.pipe';
 
 @Controller('cases')
 export class CasesController {
-    constructor(private casesService: CasesService) {}
+  constructor(private casesService: CasesService) { }
 
-    @Get()
-    async getAllCases(@Query(ParseCasesFilterPipe, ValidationPipe) getCaseFilterDTO: GetCaseFilterDTO): Promise<Case[]> {
-        if (Object.keys(getCaseFilterDTO).length) {
-            return await this.casesService.getCasesFiltered(getCaseFilterDTO);
-        }
-        return await this.casesService.getAllCases();
+  @Get()
+  async getAllCases(@Query(ParseCasesFilterPipe, ValidationPipe) getCaseFilterDTO: GetCaseFilterDTO): Promise<Case[]> {
+    if (Object.keys(getCaseFilterDTO).length) {
+      return await this.casesService.getCasesFiltered(getCaseFilterDTO);
     }
+    return await this.casesService.getAllCases();
+  }
 
-    @Post()
-    @UsePipes(ValidationPipe)
-    async createCase(@Body('', GenderValidationPipe) createCaseDTO: CreateCaseDTO): Promise<Case> {
-        return await this.casesService.createCase(createCaseDTO);
-    }
+  @Post()
+  @UsePipes(ValidationPipe)
+  async createCase(@Body('', GenderValidationPipe) createCaseDTO: CreateCaseDTO): Promise<Case> {
+    return await this.casesService.createCase(createCaseDTO);
+  }
 
-    @Get('/:id')
-    async getCaseById(@Param('id') id: string): Promise<Case> {
-        return await this.casesService.getCaseById(id);
-    }
+  @Get('/:id')
+  async getCaseById(@Param('id') id: string): Promise<Case> {
+    return await this.casesService.getCaseById(id);
+  }
 
-    @Patch('/:id')
-    async updateCase(@Param('id') id: string, @Body('', GenderValidationPipe) updateCaseDTO: UpdateCaseDTO): Promise<Case> {
-        return await this.casesService.updateCase(id, updateCaseDTO);
-    }
+  @Patch('/:id')
+  async updateCase(@Param('id') id: string, @Body('', GenderValidationPipe) updateCaseDTO: UpdateCaseDTO): Promise<Case> {
+    return await this.casesService.updateCase(id, updateCaseDTO);
+  }
 }
