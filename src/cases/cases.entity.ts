@@ -1,5 +1,5 @@
 import { BaseEntity, Column, PrimaryGeneratedColumn, Entity } from "typeorm";
-import { Gender } from "./case.model";
+import { Status, Gender } from "./case.enum";
 
 @Entity('Case')
 export class CaseEntity extends BaseEntity {
@@ -25,8 +25,11 @@ export class CaseEntity extends BaseEntity {
   gender: Gender;
 
   @Column()
-  recovered: boolean;
+  status: Status;
 
   @Column()
-  died: boolean;
+  createdAt: Date;
+
+  @Column()
+  updatedAt: Date;
 }
