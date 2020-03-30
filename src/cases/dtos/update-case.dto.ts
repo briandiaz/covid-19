@@ -1,4 +1,4 @@
-import { Gender } from '../case.model';
+import { Gender, Status } from '../case.enum';
 
 export class UpdateCaseDTO {
   name?: string;
@@ -7,6 +7,5 @@ export class UpdateCaseDTO {
   longitude?: number;
   infectionStage?: number;
   gender?: Gender;
-  recovered?: boolean;
-  died?: boolean;
+  status?: Status;
 }

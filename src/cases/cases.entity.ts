@@ -1,5 +1,6 @@
-import { BaseEntity, Column, PrimaryGeneratedColumn, Entity } from "typeorm";
+import { BaseEntity, Column, PrimaryGeneratedColumn, Entity, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { Status, Gender } from "./case.enum";
+import { IsNotEmpty, IsString, IsLatitude, IsLongitude, IsDate } from "class-validator";
 
 @Entity('Case')
 export class CaseEntity extends BaseEntity {
@@ -7,29 +8,43 @@ export class CaseEntity extends BaseEntity {
   id: string;
 
   @Column()
+  @IsNotEmpty()
+  @IsString()
   name: string;
 
   @Column()
+  @IsNotEmpty()
+  @IsString()
   nationalId: string;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 7, scale: 2 })
+  @IsNotEmpty()
+  @IsLatitude()
   latitude: number;
 
-  @Column()
+  @Column({ type: 'decimal', precision: 7, scale: 2 })
+  @IsNotEmpty()
+  @IsLongitude()
   longitude: number;
 
   @Column()
   infectionStage: number;
 
   @Column()
+  @IsNotEmpty()
+  @IsString()
   gender: Gender;
 
   @Column()
+  @IsNotEmpty()
+  @IsString()
   status: Status;
 
-  @Column()
+  @CreateDateColumn({type: "timestamp"})
+  @IsNotEmpty()
+  @IsDate()
   createdAt: Date;
 
-  @Column()
-  updatedAt: Date;
+  @UpdateDateColumn({type: "timestamp"})
+  updatedAt!: Date;
 }

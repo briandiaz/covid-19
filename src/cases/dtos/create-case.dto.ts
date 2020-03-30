@@ -1,5 +1,5 @@
-import { Gender } from '../case.model';
-import { IsBoolean, IsNotEmpty, IsInt, IsString, IsLatitude, IsLongitude } from 'class-validator';
+import { IsNotEmpty, IsInt, IsString, IsLatitude, IsLongitude } from 'class-validator';
+import { Status, Gender } from '../case.enum';
 
 export class CreateCaseDTO {
   @IsNotEmpty()
@@ -26,9 +26,7 @@ export class CreateCaseDTO {
   @IsString()
   gender: Gender;
 
-  @IsBoolean()
-  recovered: boolean;
-
-  @IsBoolean()
-  died: boolean;
+  @IsNotEmpty()
+  @IsString()
+  status: Status;
 }

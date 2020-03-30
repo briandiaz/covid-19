@@ -1,5 +1,5 @@
-import { Gender } from '../case.model';
-import { IsBoolean, IsInt, IsString, IsLatitude, IsLongitude, IsOptional, IsIn } from 'class-validator';
+import { IsInt, IsString, IsLatitude, IsLongitude, IsOptional, IsIn } from 'class-validator';
+import { Gender, Status } from '../case.enum';
 
 export class GetCaseFilterDTO {
   @IsOptional()
@@ -19,11 +19,8 @@ export class GetCaseFilterDTO {
   @IsIn([Gender.MALE, Gender.FEMALE, Gender.NA])
   gender?: string;
 
+  @IsString()
   @IsOptional()
-  @IsBoolean()
-  recovered?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  died?: boolean;
+  @IsIn([Status.ACTIVE, Status.RECOVERED, Status.DEAD])
+  status?: string;
 }
