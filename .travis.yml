@@ -8,6 +8,7 @@ cache:
 
 install:
   - npm install
+  - npm install jest --save
 
 script:
-  - npm run test
+  - npm test

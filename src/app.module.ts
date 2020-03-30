@@ -9,4 +9,4 @@ import { typeORMConfig } from './config/typeorm.config';
     CasesModule
   ],
 })
-export class AppModule {}
+export class AppModule { }

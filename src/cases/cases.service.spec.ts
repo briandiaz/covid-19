@@ -1,90 +1,140 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CasesService } from './cases.service';
-import { CasesController } from './cases.controller';
-import { Gender } from './case.model';
-import { UpdateCaseDTO } from './dtos/update-case.dto';
+import { Gender, Status } from './case.enum';
+import { CaseRepository } from './case.repository';
+import { GetCaseFilterDTO } from './dtos/get-case-filter.dto';
+import { NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { CaseEntity } from './cases.entity';
+import { getRepositoryToken } from '@nestjs/typeorm';
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+const mockCaseRepository: () => Repository<CaseEntity> = jest.fn(() => ({
+  findOne: jest.fn(),
+  createCase: jest.fn(),
+  updateCase: jest.fn(),
+  find: jest.fn(),
+  save: jest.fn(),
+}));
+
+const mockCase = {
+  id: 'some-id',
+  name: 'Susan Goodman',
+  nationalId: '1100-54466556-9',
+  latitude: 48.9912,
+  longitude: 30.949904,
+  infectionStage: 2,
+  gender: Gender.FEMALE,
+  status: Status.ACTIVE,
+};
 
 describe('CasesService', () => {
-  let service: CasesService;
-  let mockCase = null;
-  let mockCaseParams = null;
-  let cases = [];
+  let casesService: CasesService;
+  let caseRepository: any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [CasesController],
-      providers: [CasesService],
+      providers: [
+        CasesService,
+        {
+          provide: getRepositoryToken(CaseRepository),
+          useFactory: mockCaseRepository
+        }
+      ],
     }).compile();
 
-    service = module.get<CasesService>(CasesService);
-
-    mockCaseParams = {
-      name: 'Michael Vargas',
-      nationalId: '031-54466556-9',
-      latitude: 18.9912,
-      longitude: 60.949904,
-      infectionStage: 1,
-      gender: Gender.MALE,
-      recovered: false,
-      died: false
-    };
-    mockCase = await service.createCase(mockCaseParams);
-
-    cases = await service.getAllCases();
+    casesService = module.get<CasesService>(CasesService);
+    caseRepository = module.get<CaseRepository>(CaseRepository);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(casesService).toBeDefined();
+    expect(caseRepository).toBeDefined();
   });
 
-  describe('getAllCases()', () => {
-    it('should return an array', () => {
-      expect(cases).toBeInstanceOf(Array);
+  describe('getCases', () => {
+    it('should get all cases from repository', async () => {
+      caseRepository.find.mockResolvedValue('expectedValue');
+      expect(caseRepository.find).not.toHaveBeenCalled();
+
+      const result = await casesService.getCases({});
+
+      expect(caseRepository.find).toHaveBeenCalled();
+      expect(result).toEqual('expectedValue');
     });
-    it('should return an array of size 1', () => {
-      expect(cases.length).toBe(1);
-    });
-    it('should return an array of cases', () => {
-      expect(cases[0]).toBe(mockCase);
+    it('should get all cases with filter from repository', async () => {
+      caseRepository.find.mockResolvedValue([mockCase]);
+      expect(caseRepository.find).not.toHaveBeenCalled();
+
+      const filters: GetCaseFilterDTO = { gender: Gender.FEMALE, status: Status.RECOVERED };
+      const result = await casesService.getCases(filters);
+
+      expect(caseRepository.find).toHaveBeenCalled();
+      expect(result).toEqual([mockCase]);
     });
   });
 
-  describe('createCase()', () => {
-    const params = {
-      name: 'Susan Goodman',
-      nationalId: '1100-54466556-9',
-      latitude: 48.9912,
-      longitude: 30.949904,
-      infectionStage: 2,
-      gender: Gender.FEMALE,
-      recovered: true,
-      died: false
-    };
-    it('should return an object of case entity when created', async () => {
-      const expectedResult = params;
-      const result = await service.createCase(params);
-      expect(result).toBeDefined();
+  describe('getCaseById', () => {
+    it('should get a case from repository by id', async () => {
+      caseRepository.findOne.mockResolvedValue(mockCase);
+      expect(caseRepository.findOne).not.toHaveBeenCalled();
+
+      const result = await casesService.getCaseById('some-id');
+
+      expect(caseRepository.findOne).toHaveBeenCalled();
+      expect(result).toStrictEqual(mockCase);
+    });
+    it('should throw error getting a case by non existent id', async () => {
+      caseRepository.findOne.mockResolvedValue(null);
+      expect(caseRepository.findOne).not.toHaveBeenCalled();
+
+      try {
+        await casesService.getCaseById('not-found-id');
+      } catch (error) {
+        expect(caseRepository.findOne).toHaveBeenCalled();
+        expect(error).toBeInstanceOf(NotFoundException);
+        expect(error.message).toBe(`Case with id 'not-found-id' was not found.`);
+      }
+    });
+  });
+
+  describe('createCase', () => {
+    it('should save a case and return its result from repository', async () => {
+      caseRepository.createCase.mockResolvedValue(mockCase);
+      expect(caseRepository.createCase).not.toHaveBeenCalled();
+
+      const expectedResult = mockCase;
+      const result = await casesService.createCase(mockCase);
       delete result.id;
+
+      expect(result).toBeDefined();
+      expect(caseRepository.createCase).toHaveBeenCalled();
       expect(result).toStrictEqual(expectedResult);
     });
   });
 
-  describe('getCaseById()', () => {
-    it('should return a case by given id', async () => {
-      const expectedResult = mockCase;
-      const response = await service.getCaseById(mockCase.id);
-      expect(response).toBe(expectedResult);
-    });
-  });
-
-  describe('updateCase()', () => {
-    it('should update a case and return the data', async () => {
-      const params: UpdateCaseDTO = {
-        recovered: true,
+  describe('updateCase', () => {
+    it('should update a case and return result from repository', async () => {
+      const updateParams = {
+        gender: Gender.MALE,
+        status: Status.RECOVERED,
       };
-      const response = await service.updateCase(mockCase.id, params);
-      expect(response).toBeDefined();
-      expect(response).toStrictEqual({ ...mockCase, ...params });
+      const expectedResult = {
+        ...mockCase,
+        ...updateParams,
+      };
+      caseRepository.updateCase.mockResolvedValue(expectedResult);
+      caseRepository.findOne.mockResolvedValue(mockCase);
+
+      expect(caseRepository.findOne).not.toHaveBeenCalled();
+      expect(caseRepository.updateCase).not.toHaveBeenCalled();
+
+      const result = await casesService.updateCase('some-id', updateParams);
+
+      expect(caseRepository.findOne).toHaveBeenCalled();
+      expect(caseRepository.updateCase).toHaveBeenCalled();
+      expect(result).toStrictEqual(expectedResult);
     });
   });
 });

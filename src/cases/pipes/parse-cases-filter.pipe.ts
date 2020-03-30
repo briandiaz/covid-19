@@ -8,23 +8,12 @@ export class ParseCasesFilterPipe implements PipeTransform {
                 throw new BadRequestException('\'infectionStage\' is not a number');
             }
         }
-        if (value.recovered) {
-            value.recovered = this.getBooleanValue('recovered', value.recovered);
+        if (value.status) {
+          value.status = value.status.toUpperCase();
         }
-        if (value.died) {
-            value.died = this.getBooleanValue('died', value.died);
+        if (value.gender) {
+          value.gender = value.gender.toUpperCase();
         }
-
         return value;
-    }
-
-    private getBooleanValue(key: string, value: any): boolean {
-        const booleanValues = ['true', 'false'];
-
-        if (!booleanValues.includes(value)) {
-            throw new BadRequestException(`'${key}' is not a boolean type.`);
-        }
-
-        return value === 'true';
     }
 }
