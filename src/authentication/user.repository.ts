@@ -5,17 +5,20 @@ import { SignInCredentialsDTO } from "./dtos/signin-credentials.dto";
 import { BadRequestException, InternalServerErrorException } from "@nestjs/common";
 import { ERROR_CODES, CONSTRAINTS } from './constants';
 import { UserRO } from './user.interface';
+import * as bcrypt from 'bcrypt';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
   async signUp(signUpCredentials: SignUpCredentialsDTO): Promise<UserRO> {
     const { name, username, email, password } = signUpCredentials;
+    const salt = await bcrypt.genSalt();
 
     const user = new UserEntity();
     user.name = name;
     user.email = email;
     user.username = username;
-    user.password = password;
+    user.salt = salt;
+    user.password = await this.generateHashPassword(password, salt);
 
     let savedUser = null;
 
@@ -47,5 +50,9 @@ export class UserRepository extends Repository<UserEntity> {
       email: user.email,
       username: user.username,
     }
+  }
+
+  private async generateHashPassword(password: string, salt: string): Promise<string>{
+    return bcrypt.hash(password, salt);
   }
 }

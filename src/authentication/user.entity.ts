@@ -29,4 +29,9 @@ export class UserEntity extends BaseEntity {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  @Column()
+  @IsString()
+  @IsNotEmpty()
+  salt: string;
 }
