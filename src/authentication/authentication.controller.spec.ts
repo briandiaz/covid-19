@@ -4,10 +4,10 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { SignUpCredentialsDTO } from './dtos/signup-credentials.dto';
-import { UserRO } from './user.interface';
 import { UserRepository } from './user.repository';
 import { SignInCredentialsDTO } from './dtos/signin-credentials.dto';
-import { JwtPayload } from './jwt-payload.interface';
+import { UserRO } from './interfaces/user.interface';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 const mockUserRepository = () => ({
   signUp: jest.fn(),
@@ -46,6 +46,7 @@ describe('Authentication Controller', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
     expect(authenticationService).toBeDefined();
+    expect(jwtService).toBeDefined();
   });
 
   describe('POST /signup', () => {
