@@ -1,4 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { NotFoundException } from '@nestjs/common';
+import { PassportModule } from '@nestjs/passport';
 import { CasesController } from './cases.controller';
 import { CasesService } from './cases.service';
 import { UpdateCaseDTO } from './dtos/update-case.dto';
@@ -6,8 +9,6 @@ import { Gender, Status } from './case.enum';
 import { CaseRepository } from './case.repository';
 import { CreateCaseDTO } from './dtos/create-case.dto';
 import { CaseEntity } from './cases.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
-import { NotFoundException } from '@nestjs/common';
 
 const mockCaseRepository = () => ({
   findOne: jest.fn(),
@@ -30,6 +31,11 @@ describe('Cases Controller', () => {
           provide: getRepositoryToken(CaseRepository),
           useFactory: mockCaseRepository
         }
+      ],
+      imports: [
+        PassportModule.register({
+          defaultStrategy: 'jwt',
+        }),
       ],
     }).compile();
 

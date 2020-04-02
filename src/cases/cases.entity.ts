@@ -2,7 +2,7 @@ import { BaseEntity, Column, PrimaryGeneratedColumn, Entity, CreateDateColumn, U
 import { Status, Gender } from "./case.enum";
 import { IsNotEmpty, IsString, IsLatitude, IsLongitude, IsDate } from "class-validator";
 
-@Entity('Case')
+@Entity('case')
 export class CaseEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
