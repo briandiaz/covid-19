@@ -4,7 +4,7 @@ import { UserEntity } from "./user.entity";
 import { SignUpCredentialsDTO } from "./dtos/signup-credentials.dto";
 import { SignInCredentialsDTO } from "./dtos/signin-credentials.dto";
 import { ERROR_CODES, CONSTRAINTS } from './constants';
-import { UserRO } from './user.interface';
+import { UserRO } from './interfaces/user.interface';
 import * as bcrypt from 'bcrypt';
 
 @EntityRepository(UserEntity)
@@ -48,10 +48,6 @@ export class UserRepository extends Repository<UserEntity> {
     }
 
     return null;
-  }
-
-  async signOut(userId: string): Promise<any> {
-    return Promise.resolve(false);
   }
 
   private generateUserRO(user: UserEntity): UserRO {

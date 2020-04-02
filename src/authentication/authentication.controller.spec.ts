@@ -46,6 +46,7 @@ describe('Authentication Controller', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
     expect(authenticationService).toBeDefined();
+    expect(jwtService).toBeDefined();
   });
 
   describe('POST /signup', () => {

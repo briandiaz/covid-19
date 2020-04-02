@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthenticationService } from './authentication.service';
 import { UserRepository } from './user.repository';
 import { SignUpCredentialsDTO } from './dtos/signup-credentials.dto';
-import { UserRO } from './user.interface';
-import { JwtPayload } from './jwt-payload.interface';
+import { UserRO } from './interfaces/user.interface';
+import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { SignInCredentialsDTO } from './dtos/signin-credentials.dto';
 
 const mockUserRepository = () => ({
