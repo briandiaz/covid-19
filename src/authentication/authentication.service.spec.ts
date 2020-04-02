@@ -8,6 +8,7 @@ import { UserRO } from './user.interface';
 const mockUserRepository = () => ({
   signUp: jest.fn(),
   save: jest.fn(),
+  validateCredentials: jest.fn(),
 });
 
 describe('AuthenticationService', () => {
@@ -35,7 +36,7 @@ describe('AuthenticationService', () => {
   });
 
   describe('signUp', () => {
-    it('should return a session of credentials provided.', async () => {
+    it('should save user info from credentials provided.', async () => {
       const mock: SignUpCredentialsDTO = {
         name: 'Brad Paulsen',
         email: 'brad.paulsen@mydomain.com',
@@ -53,6 +54,30 @@ describe('AuthenticationService', () => {
       const response = await service.signUp(mock);
 
       expect(userRepository.signUp).toHaveBeenCalled();
+      expect(response).toBeDefined();
+      expect(response).toStrictEqual(expectedResult);
+    });
+  });
+
+  describe('signIn', () => {
+    it('should return a session from credentials provided.', async () => {
+      const mock: SignUpCredentialsDTO = {
+        name: 'Brad Paulsen',
+        email: 'brad.paulsen@mydomain.com',
+        username: 'bradpaulsen',
+        password: 'Br4dhey2320',
+      };
+      const expectedResult: UserRO = {
+        name: mock.name,
+        username: mock.username,
+        email: mock.email,
+      };
+      jest.spyOn(userRepository, 'validateCredentials').mockResolvedValue(expectedResult);
+      expect(userRepository.validateCredentials).not.toHaveBeenCalled();
+
+      const response = await service.signIn(mock);
+
+      expect(userRepository.validateCredentials).toHaveBeenCalled();
       expect(response).toBeDefined();
       expect(response).toStrictEqual(expectedResult);
     });

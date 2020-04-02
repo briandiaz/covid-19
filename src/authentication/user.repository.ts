@@ -32,18 +32,29 @@ export class UserRepository extends Repository<UserEntity> {
       throw new InternalServerErrorException(error.message);
     }
 
-    return this.createUserRO(savedUser);
+    return this.generateUserRO(savedUser);
   }
 
-  async signIn(signInCredentials: SignInCredentialsDTO): Promise<any> {
-    return Promise.resolve(false);
+  async validateCredentials(signInCredentials: SignInCredentialsDTO): Promise<UserRO> {
+    const { username, email, password }  = signInCredentials;
+
+    const user = await this.createQueryBuilder('user')
+      .where('user.username = :username', { username })
+      .orWhere('user.email = :email', { email })
+      .getOne();
+
+    if (user && (await user.isValidPassword(password))) {
+      return this.generateUserRO(user);
+    }
+
+    return null;
   }
 
   async signOut(userId: string): Promise<any> {
     return Promise.resolve(false);
   }
 
-  private createUserRO(user: UserEntity): UserRO {
+  private generateUserRO(user: UserEntity): UserRO {
     return {
       id: user.id,
       name: user.name,
