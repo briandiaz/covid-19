@@ -1,9 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthenticationService } from './authentication.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
+import { AuthenticationService } from './authentication.service';
 import { UserRepository } from './user.repository';
 import { SignUpCredentialsDTO } from './dtos/signup-credentials.dto';
 import { UserRO } from './user.interface';
+import { JwtPayload } from './jwt-payload.interface';
+import { SignInCredentialsDTO } from './dtos/signin-credentials.dto';
 
 const mockUserRepository = () => ({
   signUp: jest.fn(),
@@ -11,9 +14,14 @@ const mockUserRepository = () => ({
   validateCredentials: jest.fn(),
 });
 
+const mockJwtService = () => ({
+  sign: jest.fn(),
+});
+
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
   let userRepository: UserRepository;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,12 +29,17 @@ describe('AuthenticationService', () => {
         AuthenticationService,
         {
           provide: getRepositoryToken(UserRepository),
-          useFactory: mockUserRepository
+          useFactory: mockUserRepository,
+        },
+        {
+          provide: JwtService,
+          useFactory: mockJwtService,
         }
       ],
     }).compile();
 
     service = module.get<AuthenticationService>(AuthenticationService);
+    jwtService = module.get<JwtService>(JwtService);
     userRepository = module.get<UserRepository>(UserRepository);
   });
 
@@ -61,18 +74,21 @@ describe('AuthenticationService', () => {
 
   describe('signIn', () => {
     it('should return a session from credentials provided.', async () => {
-      const mock: SignUpCredentialsDTO = {
-        name: 'Brad Paulsen',
-        email: 'brad.paulsen@mydomain.com',
+      const mock: SignInCredentialsDTO = {
         username: 'bradpaulsen',
         password: 'Br4dhey2320',
       };
-      const expectedResult: UserRO = {
-        name: mock.name,
+      const userRO: UserRO = {
+        name: 'Brad',
         username: mock.username,
         email: mock.email,
+      }
+      const expectedResult: JwtPayload = {
+        user: userRO,
+        accessToken: 'my-jwt-token',
       };
-      jest.spyOn(userRepository, 'validateCredentials').mockResolvedValue(expectedResult);
+      jest.spyOn(jwtService, 'sign').mockReturnValue(expectedResult.accessToken);
+      jest.spyOn(userRepository, 'validateCredentials').mockResolvedValue(userRO);
       expect(userRepository.validateCredentials).not.toHaveBeenCalled();
 
       const response = await service.signIn(mock);

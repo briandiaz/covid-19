@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Param, Patch, UsePipes, ValidationPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, UsePipes, ValidationPipe, Query, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CasesService } from './cases.service';
 import { CreateCaseDTO } from './dtos/create-case.dto';
 import { UpdateCaseDTO } from './dtos/update-case.dto';
@@ -22,12 +23,14 @@ export class CasesController {
   }
 
   @Post()
+  @UseGuards(AuthGuard())
   @UsePipes(ValidationPipe)
   async createCase(@Body(CaseValidationPipe) createCaseDTO: CreateCaseDTO): Promise<CaseEntity> {
     return await this.casesService.createCase(createCaseDTO);
   }
 
   @Patch('/:id')
+  @UseGuards(AuthGuard())
   @UsePipes(ValidationPipe)
   async updateCase(@Param('id') id: string, @Body(CaseValidationPipe) updateCaseDTO: UpdateCaseDTO): Promise<CaseEntity> {
     return await this.casesService.updateCase(id, updateCaseDTO);

@@ -1,8 +1,9 @@
-import { Controller, Post, Body, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, ValidationPipe, Get } from '@nestjs/common';
 import { SignUpCredentialsDTO } from './dtos/signup-credentials.dto';
 import { AuthenticationService } from './authentication.service';
 import { UserRO } from './user.interface';
 import { SignInCredentialsDTO } from './dtos/signin-credentials.dto';
+import { JwtPayload } from './jwt-payload.interface';
 
 @Controller('authentication')
 export class AuthenticationController {
@@ -16,7 +17,7 @@ export class AuthenticationController {
   }
 
   @Post('/signin')
-  async signIn(@Body() signInCredentials: SignInCredentialsDTO): Promise<UserRO> {
+  async signIn(@Body() signInCredentials: SignInCredentialsDTO): Promise<JwtPayload> {
     return this.authenticationService.signIn(signInCredentials);
   }
 }
