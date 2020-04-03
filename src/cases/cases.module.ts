@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CasesController } from './cases.controller';
 import { CasesService } from './cases.service';
 import { CaseRepository } from './case.repository';
-import { AuthenticationModule } from 'src/authentication/authentication.module';
+import { AuthenticationModule } from '../authentication/authentication.module';
 
 @Module({
   imports: [

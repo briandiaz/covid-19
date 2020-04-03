@@ -1,11 +1,18 @@
-import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, Unique } from "typeorm";
-import { IsString, IsEmail, IsNotEmpty } from "class-validator";
-import { CONSTRAINTS } from "./constants";
+import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, Unique, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { IsString, IsEmail, IsNotEmpty, IsDate } from "class-validator";
+import { CONSTRAINTS } from "../config/constants";
 import * as bcrypt from 'bcrypt';
+import { CaseEntity } from "../cases/cases.entity";
 
 @Entity('user')
-@Unique(CONSTRAINTS.UQ_USER_USERNAME.name, [CONSTRAINTS.UQ_USER_USERNAME.field])
-@Unique(CONSTRAINTS.UQ_USER_EMAIL.name, [CONSTRAINTS.UQ_USER_EMAIL.field])
+@Unique(
+  CONSTRAINTS.UQ_USER_USERNAME.name,
+  [CONSTRAINTS.UQ_USER_USERNAME.field],
+)
+@Unique(
+  CONSTRAINTS.UQ_USER_EMAIL.name,
+  [CONSTRAINTS.UQ_USER_EMAIL.field],
+)
 export class UserEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -35,6 +42,17 @@ export class UserEntity extends BaseEntity {
   @IsString()
   @IsNotEmpty()
   salt: string;
+
+  @OneToMany(() => CaseEntity, _case => _case.createdBy, { eager: true })
+  cases: CaseEntity[];
+
+  @CreateDateColumn({type: "timestamp"})
+  @IsNotEmpty()
+  @IsDate()
+  createdAt: Date;
+
+  @UpdateDateColumn({type: "timestamp"})
+  updatedAt: Date;
 
   async isValidPassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

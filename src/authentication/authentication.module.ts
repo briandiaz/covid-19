@@ -6,6 +6,7 @@ import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { UserRepository } from './user.repository';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { JWT_SECRET, JWT_EXPIRES_IN } from '../config/constants';
 
 const passportModule = PassportModule.register({
   defaultStrategy: 'jwt',
@@ -14,9 +15,9 @@ const passportModule = PassportModule.register({
 @Module({
   imports: [
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
+      secret: JWT_SECRET,
       signOptions: {
-        expiresIn: parseInt(process.env.JWT_EXPIRES_IN),
+        expiresIn: JWT_EXPIRES_IN,
       },
     }),
     passportModule,

@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsEmail, MinLength, MaxLength, Matches } from "class-validator";
-import { PASSWORD_REGEX } from '../constants';
+import { PASSWORD_REGEX } from '../../config/constants';
 
 export class SignUpCredentialsDTO {
   @IsString()

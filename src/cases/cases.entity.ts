@@ -1,6 +1,7 @@
-import { BaseEntity, Column, PrimaryGeneratedColumn, Entity, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, PrimaryGeneratedColumn, Entity, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
 import { Status, Gender } from "./case.enum";
 import { IsNotEmpty, IsString, IsLatitude, IsLongitude, IsDate } from "class-validator";
+import { UserEntity } from "../authentication/user.entity";
 
 @Entity('case')
 export class CaseEntity extends BaseEntity {
@@ -27,7 +28,7 @@ export class CaseEntity extends BaseEntity {
   @IsLongitude()
   longitude: number;
 
-  @Column()
+  @Column({ name: 'infection_stage' })
   infectionStage: number;
 
   @Column()
@@ -40,11 +41,14 @@ export class CaseEntity extends BaseEntity {
   @IsString()
   status: Status;
 
+  @ManyToOne(() => UserEntity, user => user.cases, { eager: false })
+  createdBy: UserEntity;
+
   @CreateDateColumn({type: "timestamp"})
   @IsNotEmpty()
   @IsDate()
   createdAt: Date;
 
   @UpdateDateColumn({type: "timestamp"})
-  updatedAt!: Date;
+  updatedAt: Date;
 }

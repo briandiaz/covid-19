@@ -7,6 +7,7 @@ import { NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { CaseEntity } from './cases.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { UserEntity } from '../authentication/user.entity';
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
@@ -101,11 +102,12 @@ describe('CasesService', () => {
 
   describe('createCase', () => {
     it('should save a case and return its result from repository', async () => {
+      const mockUser = new UserEntity();
       caseRepository.createCase.mockResolvedValue(mockCase);
       expect(caseRepository.createCase).not.toHaveBeenCalled();
 
       const expectedResult = mockCase;
-      const result = await casesService.createCase(mockCase);
+      const result = await casesService.createCase(mockCase, mockUser);
       delete result.id;
 
       expect(result).toBeDefined();
