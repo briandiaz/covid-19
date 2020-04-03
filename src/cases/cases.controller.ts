@@ -7,6 +7,9 @@ import { CaseValidationPipe } from './pipes/case.validation';
 import { GetCaseFilterDTO } from './dtos/get-case-filter.dto';
 import { ParseCasesFilterPipe } from './pipes/parse-cases-filter.pipe';
 import { CaseEntity } from './cases.entity';
+import { GetUser } from '../authentication/decorators/get-user.decorator';
+import { UserEntity } from '../authentication/user.entity';
+import { CaseRO } from './interfaces/case.interface';
 
 @Controller('cases')
 export class CasesController {
@@ -25,8 +28,11 @@ export class CasesController {
   @Post()
   @UseGuards(AuthGuard())
   @UsePipes(ValidationPipe)
-  async createCase(@Body(CaseValidationPipe) createCaseDTO: CreateCaseDTO): Promise<CaseEntity> {
-    return await this.casesService.createCase(createCaseDTO);
+  async createCase(
+    @Body(CaseValidationPipe) createCaseDTO: CreateCaseDTO,
+    @GetUser() user: UserEntity,
+  ): Promise<CaseRO> {
+    return await this.casesService.createCase(createCaseDTO, user);
   }
 
   @Patch('/:id')

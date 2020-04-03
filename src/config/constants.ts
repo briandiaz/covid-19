@@ -1,3 +1,5 @@
+require('dotenv/config');
+
 export const PASSWORD_REGEX = /((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/;
 
 export const ERROR_CODES = {
@@ -14,3 +16,7 @@ export const CONSTRAINTS = {
     field: 'email',
   },
 };
+
+
+export const JWT_SECRET = process.env.JWT_SECRET;
+export const JWT_EXPIRES_IN = parseInt(process.env.JWT_EXPIRES_IN);

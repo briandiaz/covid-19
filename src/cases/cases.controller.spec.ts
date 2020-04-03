@@ -9,6 +9,8 @@ import { Gender, Status } from './case.enum';
 import { CaseRepository } from './case.repository';
 import { CreateCaseDTO } from './dtos/create-case.dto';
 import { CaseEntity } from './cases.entity';
+import { CaseRO } from './interfaces/case.interface';
+import { UserEntity } from '../authentication/user.entity';
 
 const mockCaseRepository = () => ({
   findOne: jest.fn(),
@@ -93,8 +95,6 @@ describe('Cases Controller', () => {
 
   describe('POST /', () => {
     it('should return an object of case entity when created', async () => {
-      const expectedResult = new CaseEntity();
-
       const mockCaseParams: CreateCaseDTO = {
         name: 'Michael Vargas',
         nationalId: '031-54466556-9',
@@ -104,10 +104,13 @@ describe('Cases Controller', () => {
         gender: Gender.MALE,
         status: Status.ACTIVE,
       };
+      const expectedResult: CaseRO = { id: 'weoawoeawe', ...mockCaseParams };
+      const mockUser = new UserEntity();
+
       jest.spyOn(casesService, 'createCase').mockResolvedValue(expectedResult);
-      const response = await controller.createCase(mockCaseParams);
+      const response = await controller.createCase(mockCaseParams, mockUser);
+
       expect(response).toBeDefined();
-      delete response.id;
       expect(response).toStrictEqual(expectedResult);
     });
   });

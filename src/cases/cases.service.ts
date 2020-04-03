@@ -5,6 +5,8 @@ import { UpdateCaseDTO } from './dtos/update-case.dto';
 import { GetCaseFilterDTO } from './dtos/get-case-filter.dto';
 import { CaseRepository } from './case.repository';
 import { CaseEntity } from './cases.entity';
+import { UserEntity } from '../authentication/user.entity';
+import { CaseRO } from './interfaces/case.interface';
 
 @Injectable()
 export class CasesService {
@@ -29,8 +31,11 @@ export class CasesService {
     return __case;
   }
 
-  async createCase(createCaseDTO: CreateCaseDTO): Promise<CaseEntity> {
-    return await this.caseRepository.createCase(createCaseDTO);
+  async createCase(
+    createCaseDTO: CreateCaseDTO,
+    user: UserEntity
+  ): Promise<CaseRO> {
+    return await this.caseRepository.createCase(createCaseDTO, user);
   }
 
   async updateCase(id: string, updateCaseDTO: UpdateCaseDTO): Promise<CaseEntity> {
