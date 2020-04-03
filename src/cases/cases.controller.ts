@@ -38,7 +38,10 @@ export class CasesController {
   @Patch('/:id')
   @UseGuards(AuthGuard())
   @UsePipes(ValidationPipe)
-  async updateCase(@Param('id') id: string, @Body(CaseValidationPipe) updateCaseDTO: UpdateCaseDTO): Promise<CaseEntity> {
+  async updateCase(
+    @Param('id') id: string,
+    @Body(CaseValidationPipe) updateCaseDTO: UpdateCaseDTO,
+  ): Promise<CaseRO> {
     return await this.casesService.updateCase(id, updateCaseDTO);
   }
 }

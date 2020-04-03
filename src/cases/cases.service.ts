@@ -38,7 +38,10 @@ export class CasesService {
     return await this.caseRepository.createCase(createCaseDTO, user);
   }
 
-  async updateCase(id: string, updateCaseDTO: UpdateCaseDTO): Promise<CaseEntity> {
+  async updateCase(
+    id: string,
+    updateCaseDTO: UpdateCaseDTO,
+  ): Promise<CaseRO> {
     const __case = await this.getCaseById(id);
 
     return await this.caseRepository.updateCase(__case, updateCaseDTO);

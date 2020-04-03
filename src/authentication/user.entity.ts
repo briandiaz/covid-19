@@ -43,7 +43,7 @@ export class UserEntity extends BaseEntity {
   @IsNotEmpty()
   salt: string;
 
-  @OneToMany(type => CaseEntity, _case => _case.createdBy, { eager: true })
+  @OneToMany(() => CaseEntity, _case => _case.createdBy, { eager: true })
   cases: CaseEntity[];
 
   @CreateDateColumn({type: "timestamp"})

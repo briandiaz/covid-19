@@ -41,7 +41,7 @@ export class CaseEntity extends BaseEntity {
   @IsString()
   status: Status;
 
-  @ManyToOne(type => UserEntity, user => user.cases, { eager: false })
+  @ManyToOne(() => UserEntity, user => user.cases, { eager: false })
   createdBy: UserEntity;
 
   @CreateDateColumn({type: "timestamp"})

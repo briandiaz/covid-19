@@ -28,8 +28,10 @@ export class CaseRepository extends Repository<CaseEntity> {
     return this.generateCaseRO(savedCase);
   }
 
-  async updateCase(__case: CaseEntity, updateCaseDTO: UpdateCaseDTO): Promise<CaseEntity> {
-    return await this.save({ ...__case, ...updateCaseDTO, });
+  async updateCase(__case: CaseEntity, updateCaseDTO: UpdateCaseDTO): Promise<CaseRO> {
+    const updatedCase = await this.save({ ...__case, ...updateCaseDTO, });
+
+    return this.generateCaseRO(updatedCase);
   }
 
 

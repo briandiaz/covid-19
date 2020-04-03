@@ -120,12 +120,17 @@ describe('Cases Controller', () => {
       const updateParams: UpdateCaseDTO = {
         status: Status.RECOVERED,
       };
-      const expectedResult = new CaseEntity();
-      expectedResult.id = 'my-id';
-      expectedResult.status = Status.RECOVERED;
+
+      const expectedResult = {
+        ...new CaseEntity(),
+        ...updateParams,
+        id: 'my-id',
+      };
+
 
       jest.spyOn(casesService, 'updateCase').mockResolvedValue(expectedResult);
       const response = await controller.updateCase('my-id', updateParams);
+
       expect(response).toBeDefined();
       expect(response).toStrictEqual(expectedResult);
     });
