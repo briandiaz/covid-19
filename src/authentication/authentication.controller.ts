@@ -7,6 +7,7 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 
 @Controller('authentication')
 export class AuthenticationController {
+
   constructor(
     private authenticationService: AuthenticationService
   ) {}

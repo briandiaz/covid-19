@@ -129,7 +129,7 @@ describe('Cases Controller', () => {
 
 
       jest.spyOn(casesService, 'updateCase').mockResolvedValue(expectedResult);
-      const response = await controller.updateCase('my-id', updateParams);
+      const response = await controller.updateCase('my-id', updateParams, new UserEntity());
 
       expect(response).toBeDefined();
       expect(response).toStrictEqual(expectedResult);
