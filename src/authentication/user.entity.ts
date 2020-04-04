@@ -1,7 +1,7 @@
 import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, Unique, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { IsString, IsEmail, IsNotEmpty, IsDate } from "class-validator";
 import { CONSTRAINTS } from "../config/constants";
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { CaseEntity } from "../cases/cases.entity";
 
 @Entity('user')

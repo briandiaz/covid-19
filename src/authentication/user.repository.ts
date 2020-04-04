@@ -5,7 +5,7 @@ import { SignUpCredentialsDTO } from "./dtos/signup-credentials.dto";
 import { SignInCredentialsDTO } from "./dtos/signin-credentials.dto";
 import { ERROR_CODES, CONSTRAINTS } from '../config/constants';
 import { UserRO } from './interfaces/user.interface';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 @EntityRepository(UserEntity)
 export class UserRepository extends Repository<UserEntity> {
